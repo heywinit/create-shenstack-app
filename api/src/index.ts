@@ -1,5 +1,8 @@
 import { Elysia, t } from "elysia";
 import { cors } from "@elysiajs/cors";
+import { opentelemetry } from "@elysiajs/opentelemetry";
+import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-node";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { swagger } from "@elysiajs/swagger";
 import { usersRoutes } from "./routes/users";
 import { initDb } from "./lib/db";
@@ -10,6 +13,11 @@ await initDb();
 // Create the Elysia app
 const app = new Elysia()
   .use(cors())
+  .use(
+    opentelemetry({
+      spanProcessors: [new BatchSpanProcessor(new OTLPTraceExporter())],
+    })
+  )
   .use(
     swagger({
       documentation: {
