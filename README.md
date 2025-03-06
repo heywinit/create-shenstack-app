@@ -52,5 +52,3 @@ cp .env.example .env
 cd api && bun dev
 cd app && bun dev
 ```
-
-## 🏗️ Project Structure
