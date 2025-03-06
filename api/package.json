@@ -1,0 +1,27 @@
+{
+  "name": "@shenstack/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "build": "bun build ./src/index.ts --target bun --outdir dist",
+    "start": "bun dist/index.js",
+    "db:push": "drizzle-kit push:pg",
+    "db:studio": "drizzle-kit studio",
+    "db:generate": "drizzle-kit generate:pg"
+  },
+  "dependencies": {
+    "@elysiajs/cors": "^0.8.0",
+    "@elysiajs/swagger": "^0.8.5",
+    "@neondatabase/serverless": "^0.9.0",
+    "drizzle-orm": "^0.29.3",
+    "elysia": "^0.8.17",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "drizzle-kit": "^0.20.14",
+    "typescript": "^5"
+  }
+}
