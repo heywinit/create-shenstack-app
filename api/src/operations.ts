@@ -1,4 +1,4 @@
-import { getDb } from ".";
+import { getDb } from "./lib/db";
 import * as schema from "./schema";
 import { eq } from "drizzle-orm";
 
