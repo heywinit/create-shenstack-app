@@ -17,6 +17,7 @@
     "@elysiajs/swagger": "^1.2.2",
     "drizzle-orm": "^0.40.0",
     "elysia": "^1.2.24",
+    "postgres": "^3.4.5",
     "zod": "^3.24.2"
   },
   "devDependencies": {
