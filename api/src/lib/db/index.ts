@@ -1,21 +1,20 @@
+import { Elysia } from "elysia";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
 
-let db: ReturnType<typeof drizzle>;
+// Create the database connection
+const sql = postgres(process.env.DATABASE_URL!);
+export const db = drizzle(sql, { schema });
 
-// Initialize database connection
-export function getDb() {
-  if (!db) {
-    const sql = postgres(process.env.DATABASE_URL!);
-    db = drizzle(sql, { schema });
-  }
-  return db;
-}
+// Create a function to get the database instance
+export const getDb = () => db;
+
+// Create an Elysia plugin for database access
+export const dbPlugin = new Elysia({ name: "db" }).decorate("db", db);
 
 // Initialize database with migration
 export async function initDb() {
   console.log("Initializing database...");
-  // In a real app, you would run migrations here using:
   // await migrate(db, { migrationsFolder: './drizzle' })
 }

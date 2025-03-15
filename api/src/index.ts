@@ -1,18 +1,17 @@
-import { Elysia, t } from "elysia";
-import { cors } from "@elysiajs/cors";
 import { opentelemetry } from "@elysiajs/opentelemetry";
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-node";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { swagger } from "@elysiajs/swagger";
-import { usersRoutes } from "./routes/users";
 import { initDb } from "./lib/db";
+import { auth } from "./routes/auth";
+import { app } from "./lib/app";
+import { users } from "./routes/users";
 
 // Initialize database
 await initDb();
 
-// Create the Elysia app
-const app = new Elysia()
-  .use(cors())
+// Add remaining plugins and routes
+app
   .use(
     opentelemetry({
       spanProcessors: [new BatchSpanProcessor(new OTLPTraceExporter())],
@@ -28,10 +27,15 @@ const app = new Elysia()
       },
     })
   )
-  .get("/", () => ({ message: "SHENSTACK API is running" }))
-  .group("/api", (app) => app.use(usersRoutes));
+  .use(auth)
+  .use(users)
+  .get("/", () => ({ message: "SHENSTACK API is running" }));
 
 // Start the server
 app.listen(3001, () => {
   console.log("🚀 SHENSTACK API running at http://localhost:3001");
 });
+
+console.log(
+  `🦊 Server is running at ${app.server?.hostname}:${app.server?.port}`
+);

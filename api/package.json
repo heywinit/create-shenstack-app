@@ -13,8 +13,10 @@
   },
   "dependencies": {
     "@elysiajs/cors": "^1.2.0",
+    "@elysiajs/jwt": "^1.2.0",
     "@elysiajs/opentelemetry": "^1.2.0",
     "@elysiajs/swagger": "^1.2.2",
+    "bcryptjs": "^3.0.2",
     "drizzle-orm": "^0.40.0",
     "elysia": "^1.2.24",
     "postgres": "^3.4.5",

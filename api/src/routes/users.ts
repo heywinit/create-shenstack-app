@@ -1,38 +1,45 @@
-import { Elysia } from "elysia";
-import { userOperations } from "../lib/db/operations";
+import { t } from "elysia";
+import { UserService } from "../services/userService";
+import { app } from "../lib/app";
 
-export const usersRoutes = new Elysia({ prefix: "/users" })
-  .get("/", async () => {
-    const users = await userOperations.getAll();
-    return users;
-  })
-  .get("/:id", async ({ params }) => {
-    const user = await userOperations.getById(params.id);
-    if (!user) {
-      throw new Error("User not found");
-    }
-    return user;
-  })
-  .post("/", async ({ body }) => {
-    try {
-      const newUser = await userOperations.create(body as any);
-      return { success: true, user: newUser };
-    } catch (error) {
-      throw new Error("Invalid user data");
-    }
-  })
-  .put("/:id", async ({ params, body }) => {
-    try {
-      const updatedUser = await userOperations.update(params.id, body as any);
-      if (!updatedUser) {
-        throw new Error("User not found");
+export const users = app.group("/users", (app) =>
+  app
+    .get("/", async () => {
+      return await UserService.getAll();
+    })
+    .get("/:id", async ({ params }) => {
+      return await UserService.getById(params.id);
+    })
+    .post(
+      "/",
+      async ({ body }) => {
+        const newUser = await UserService.create(body);
+        return { success: true, user: newUser };
+      },
+      {
+        body: t.Object({
+          email: t.String(),
+          password: t.String(),
+        }),
       }
-      return { success: true, user: updatedUser };
-    } catch (error) {
-      throw new Error("Invalid user data");
-    }
-  })
-  .delete("/:id", async ({ params }) => {
-    await userOperations.delete(params.id);
-    return { success: true };
-  });
+    )
+    .put(
+      "/:id",
+      async ({ params, body }) => {
+        const updatedUser = await UserService.update(params.id, body);
+        return { success: true, user: updatedUser };
+      },
+      {
+        body: t.Object({
+          // Add validation schema for updateable fields
+          email: t.Optional(t.String()),
+          password: t.Optional(t.String()),
+          // Add other optional fields
+        }),
+      }
+    )
+    .delete("/:id", async ({ params }) => {
+      await UserService.delete(params.id);
+      return { success: true };
+    })
+);
