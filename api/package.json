@@ -7,24 +7,24 @@
     "dev": "bun --watch src/index.ts",
     "build": "bun build ./src/index.ts --target bun --outdir dist",
     "start": "bun dist/index.js",
-    "db:push": "drizzle-kit push:pg",
-    "db:studio": "drizzle-kit studio",
-    "db:generate": "drizzle-kit generate:pg"
+    "prisma:generate": "prisma generate",
+    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:studio": "prisma studio"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.2.0",
     "@elysiajs/jwt": "^1.2.0",
     "@elysiajs/opentelemetry": "^1.2.0",
     "@elysiajs/swagger": "^1.2.2",
+    "@prisma/client": "^6.5.0",
     "bcryptjs": "^3.0.2",
-    "drizzle-orm": "^0.40.0",
     "elysia": "^1.2.24",
-    "postgres": "^3.4.5",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/node": "^20",
-    "drizzle-kit": "^0.20.14",
+    "prisma": "^6.5.0",
     "typescript": "^5"
   }
 }

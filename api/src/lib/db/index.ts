@@ -1,20 +1,24 @@
 import { Elysia } from "elysia";
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
-import * as schema from "./schema";
+import { PrismaClient } from "@prisma/client";
 
-// Create the database connection
-const sql = postgres(process.env.DATABASE_URL!);
-export const db = drizzle(sql, { schema });
+// Create a Prisma Client instance
+export const prisma = new PrismaClient();
 
-// Create a function to get the database instance
-export const getDb = () => db;
+// Create a function to get the Prisma instance
+export const getPrisma = () => prisma;
 
 // Create an Elysia plugin for database access
-export const dbPlugin = new Elysia({ name: "db" }).decorate("db", db);
+export const dbPlugin = new Elysia({ name: "db" }).decorate("db", prisma);
 
-// Initialize database with migration
+// Initialize database connection
 export async function initDb() {
-  console.log("Initializing database...");
-  // await migrate(db, { migrationsFolder: './drizzle' })
+  console.log("Initializing database connection...");
+  // Connect to the database
+  await prisma.$connect();
+  console.log("Database connection initialized");
+}
+
+// Clean up function for application shutdown
+export async function cleanupDb() {
+  await prisma.$disconnect();
 }
